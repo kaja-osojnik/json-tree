@@ -1,25 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Category = ({ tree, childId }) => {
   const [showInput, setShowinput] = useState(false);
   const [newItem, setNewItem] = useState("");
-  const [newId, setNewId] = useState(null);
   const [err, setErr] = useState(false);
+  const [initialStateIds, setInitialStateIds] = useState(tree.children);
+
+  useEffect(() => {
+    async function addIds() {
+      const data = await initialStateIds.map((x, i) => {
+        x.id = childId + i.toString();
+        return x;
+      });
+
+      setInitialStateIds(data);
+      console.log(data);
+      return;
+    }
+    addIds();
+  }, []);
 
   const onSubmit = () => {
     if (newItem === "") {
       setErr(true);
     } else {
-      console.log(newItem);
-      const newId = childId + tree.children.length.toString();
+      // console.log(newItem);
+      const newId = childId + initialStateIds.length.toString();
       tree.children.push({ title: newItem, id: newId, children: [] });
-      console.log(tree);
+      // console.log(tree);
       setShowinput(false);
     }
   };
 
   return (
-    <div>
+    <div className="border w30">
       <div className="flex">
         <h2> {tree.title} </h2>
         <p>
@@ -51,8 +65,8 @@ const Category = ({ tree, childId }) => {
               <button onClick={onSubmit}>ADD</button>
             </li>
           )}
-          {tree.children.length
-            ? tree.children.map((child, index) => (
+          {initialStateIds.length
+            ? initialStateIds.map((child, index) => (
                 <li>
                   <Category
                     tree={child}
