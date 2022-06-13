@@ -1,34 +1,32 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import Category from "./Category";
 import initialState from "../initialState";
 import AddCategoryItem from "./AddCategoryItem";
 
 const Main = () => {
+  const [title, setTitle] = useState("MUSIC GENRES");
   const [initialStateIds, setInitialStateIds] = useState(initialState.children);
+  const addIds = useCallback(() => {
+    const data = initialState.children.map((x, i) => {
+      const uniqid = Math.random().toString(36).substr(2, 9);
+      x.id = uniqid;
+      return x;
+    });
+
+    setInitialStateIds(data);
+    return;
+  }, [setInitialStateIds]);
 
   useEffect(() => {
-    async function addIds() {
-      const data = await initialState.children.map((x, i) => {
-        var uniqid = Date.now();
-        var randLetter = String.fromCharCode(
-          65 + Math.floor(Math.random() * 26)
-        );
-        var uniqid = randLetter + Date.now();
-        x.id = uniqid;
-        return x;
-      });
-
-      setInitialStateIds(data);
-      return;
-    }
     addIds();
-  }, []);
+  }, [addIds]);
 
   return (
     <Fragment>
-      <h1>MUSIC GENRES</h1>
+      <h1>{title}</h1>
       <AddCategoryItem
         initialStateIds={initialStateIds}
+        setInitialStateIds={setInitialStateIds}
         childId={initialStateIds.id}
       />
       <div className="flex flex-between container">

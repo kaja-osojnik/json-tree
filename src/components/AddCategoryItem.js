@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const AddCategoryItem = ({ initialStateIds, childId }) => {
+const AddCategoryItem = ({ initialStateIds, childId, setInitialStateIds }) => {
   const [newItem, setNewItem] = useState("");
   const [err, setErr] = useState(false);
   const [showInput, setShowinput] = useState(false);
+  const newId = Math.random().toString(36).substr(2, 9);
 
   const onSubmit = () => {
     if (newItem === "") {
       setErr(true);
     } else {
-      if (childId) {
-        const newId = parseInt(childId + initialStateIds.length.toString());
-        initialStateIds.push({ title: newItem, children: [], id: newId });
-      } else {
-        const newId = initialStateIds.length;
-        initialStateIds.push({ title: newItem, children: [], id: newId });
-      }
+      setInitialStateIds([
+        ...initialStateIds,
+        { title: newItem, children: [], id: newId },
+      ]);
 
       setNewItem("");
       setShowinput("");

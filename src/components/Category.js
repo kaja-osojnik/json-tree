@@ -8,11 +8,7 @@ const Category = ({ tree }) => {
   useEffect(() => {
     async function addIds() {
       const data = await initialStateIds.map((x, i) => {
-        var uniqid = Date.now();
-        var randLetter = String.fromCharCode(
-          65 + Math.floor(Math.random() * 26)
-        );
-        var uniqid = randLetter + Date.now();
+        var uniqid = Math.random().toString(36).substr(2, 9);
         x.id = uniqid;
         return x;
       });
@@ -21,7 +17,7 @@ const Category = ({ tree }) => {
       return;
     }
     addIds();
-  }, []);
+  }, [initialStateIds]);
 
   return (
     <div className="border w30">
@@ -31,12 +27,13 @@ const Category = ({ tree }) => {
         <ul>
           <AddCategoryItem
             initialStateIds={initialStateIds}
+            setInitialStateIds={setInitialStateIds}
             childId={tree.id}
           />
           {initialStateIds.length
             ? initialStateIds.map((child, index) => (
-                <li>
-                  <Category tree={child} key={tree.id} childId={tree.id} />
+                <li key={tree.id}>
+                  <Category tree={child} childId={tree.id} />
                 </li>
               ))
             : ""}
