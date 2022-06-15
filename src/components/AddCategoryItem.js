@@ -32,6 +32,12 @@ const AddCategoryItem = ({
     setShowinput(false);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      onSubmit();
+    }
+  };
+
   return (
     <li className="mb32">
       {!showEditItem && !topLevel && (
@@ -58,6 +64,7 @@ const AddCategoryItem = ({
               setNewItem(e.target.value);
             }}
             placeholder="Add New Item"
+            onKeyDown={handleKeyDown}
           />
           {err && <small>*Can not add an empty element</small>}
 
