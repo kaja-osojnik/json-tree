@@ -1,17 +1,24 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Category from "./Category";
 import initialState from "../initialState";
 import AddCategoryItem from "./AddCategoryItem";
-import { buildTree } from "../helperFunctions";
+import { buildTree, generateId } from "../helperFunctions";
 import edit from "../edit.svg";
+import gsap from "gsap";
 
 const Main = () => {
   const [title, setTitle] = useState("MUSIC GENRES");
   const [err, setErr] = useState(false);
   const [showEditTitle, setShowEditTitle] = useState(false);
-  const [initialStateIds, setInitialStateIds] = useState(
-    buildTree(initialState)
-  );
+  const [parent, setParent] = useState({
+    id: generateId(),
+    title: "",
+    children: buildTree(initialState),
+  });
+
+  useEffect(() => {
+    gsap.to(".fadein", { autoAlpha: 1, duration: 1, delay: 1.5 });
+  }, []);
 
   const onSubmit = () => {
     if (title === "") {
@@ -27,60 +34,54 @@ const Main = () => {
     }
   };
 
-  const onDelete = (id, setInitialStateIds) => {
-    setInitialStateIds(initialStateIds.filter((x) => x.id !== id));
-  };
-
-  // const onDelete = (id) => {
-  //   setInitialStateIds(initialStateIds.filter((x) => x.id !== id));
-  // };
-
   return (
     <Fragment>
       <div className="w-20">
-        {showEditTitle ? (
-          <div className="input-add">
-            <input
-              className="title-input"
-              autoFocus
-              type="text"
-              name="title"
-              value={title}
-              onChange={(e) => {
-                setErr(false);
-                setTitle(e.target.value);
-              }}
-              onKeyDown={handleKeyDown}
-              placeholder="Edit Tree Title"
-            />
-            {err && <small>*Title can't be empty</small>}
+        <div className="fadein">
+          {showEditTitle ? (
+            <div className="input-add">
+              <input
+                className="title-input"
+                autoFocus
+                type="text"
+                name="title"
+                value={title}
+                onChange={(e) => {
+                  setErr(false);
+                  setTitle(e.target.value);
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder="Edit Tree Title"
+              />
+              {err && <small>*Title can't be empty</small>}
 
-            <div className="submit-sec">
-              <button className="add-btn" onClick={onSubmit}>
-                Change Title
-              </button>
+              <div className="submit-sec">
+                <button className="add-btn" onClick={onSubmit}>
+                  Change Title
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex title-wrap">
-            <h1>{title}</h1>
-            <img src={edit} alt="" onClick={() => setShowEditTitle(true)} />
-          </div>
-        )}
+          ) : (
+            <div className="flex title-wrap">
+              <h1>{title}</h1>
+              <img src={edit} alt="" onClick={() => setShowEditTitle(true)} />
+            </div>
+          )}
 
-        <ul className="main-list">
-          {initialStateIds.map((child) => (
-            <Fragment key={child.id}>
-              <Category tree={child} onDelete={() => onDelete(child.id)} />
-            </Fragment>
-          ))}
-        </ul>
-        <AddCategoryItem
-          initialStateIds={initialStateIds}
-          setInitialStateIds={setInitialStateIds}
-          childId={initialStateIds.id}
-          topLevel={true}
-        />
+          <ul className="main-list">
+            {parent.children.map((child) => (
+              <Fragment key={child.id}>
+                <Category tree={child} parent={parent} setParent={setParent} />
+              </Fragment>
+            ))}
+          </ul>
+          <AddCategoryItem
+            treeState={parent}
+            setTreeState={setParent}
+            childId={parent.id}
+            topLevel={true}
+          />
+        </div>
       </div>
     </Fragment>
   );

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 const AddCategoryItem = ({
-  initialStateIds,
-  setInitialStateIds,
+  treeState,
+  setTreeState,
   showEditItem,
   topLevel,
   setShowList,
@@ -16,10 +16,13 @@ const AddCategoryItem = ({
     if (newItem === "") {
       setErr(true);
     } else {
-      setInitialStateIds([
-        ...initialStateIds,
-        { title: newItem, children: [], id: newId },
-      ]);
+      setTreeState({
+        ...treeState,
+        children: [
+          ...treeState.children,
+          { title: newItem, children: [], id: newId },
+        ],
+      });
 
       setNewItem("");
       setShowinput(false);
@@ -35,6 +38,9 @@ const AddCategoryItem = ({
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       onSubmit();
+    }
+    if (event.key === "Escape") {
+      onCancel();
     }
   };
 

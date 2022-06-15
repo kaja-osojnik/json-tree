@@ -1,17 +1,18 @@
 import React, { Fragment, useState } from "react";
 import edit from "../edit.svg";
 import { MdKeyboardArrowUp, MdKeyboardArrowRight } from "react-icons/md";
+import { onDelete } from "../helperFunctions";
 
 const EditItem = ({
   title,
   id,
-  children,
+  treeState,
   setShowList,
   showList,
   showEditItem,
   setShowEditItem,
-  onDelete,
-  setInitialStateIds,
+  parent,
+  setParent,
 }) => {
   const [newTitle, setNewTitle] = useState(title);
   const [err, setErr] = useState(false);
@@ -42,7 +43,7 @@ const EditItem = ({
             }}
           >
             <p className="list-item-title"> {newTitle} </p>
-            {children.length ? (
+            {treeState.children.length ? (
               <Fragment>
                 {!showList ? (
                   <MdKeyboardArrowRight className="mt3" />
@@ -76,7 +77,8 @@ const EditItem = ({
           <button
             className="cancel"
             onClick={() => {
-              onDelete(id, setInitialStateIds);
+              onDelete(id, parent, setParent);
+              setShowEditItem(false);
             }}
           >
             Delete

@@ -13,3 +13,8 @@ export const buildTree = (tree) => {
   });
   return data;
 };
+
+export const onDelete = (id, tree, updateDelete) => {
+  console.log(tree);
+  updateDelete({ ...tree, children: tree.children.filter((x) => x.id !== id) });
+};

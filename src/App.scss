@@ -13,8 +13,17 @@ overflow: hidden;
 
 .body-flex{
     @media only screen and (max-width: 600px) {
-    flex-direction: column-reverse;
+    flex-direction: column;
     }
+}
+
+.of-hidden{
+    overflow: hidden;
+}
+
+.v-hidden{
+    visibility: hidden;
+    opacity: 0;
 }
 @media only screen and (max-width: 600px) {
     height: auto;
@@ -116,6 +125,10 @@ overflow: hidden;
         &::placeholder{
             padding-bottom: 38px;
         }
+        @media only screen and (max-width: 600px) {
+            
+        }
+        
     }
 }
 
@@ -128,12 +141,22 @@ overflow: hidden;
     background-color: #2A2E3D;
     text-align: center;
     padding: 32px;
+    h2{
+        font-size: 2em;
+        transform: translateY(120%);
+        margin: 0;
+    }
     @media only screen and (max-width: 600px) {
     height: auto;
     width: 100%;
     padding: 32px 0;
     }
 }}
+
+.fadein{
+  opacity: 0;
+  visibility: hidden;  
+}
 
 li{
     list-style-type: none;
