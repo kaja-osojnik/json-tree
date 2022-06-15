@@ -1,44 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AddCategoryItem from "./AddCategoryItem";
 import EditItem from "./EditItem";
 
-const Category = ({ tree }) => {
+const Category = ({ tree, onDelete }) => {
   const [initialStateIds, setInitialStateIds] = useState(tree.children);
-
-  useEffect(() => {
-    async function addIds() {
-      const data = await initialStateIds.map((x, i) => {
-        var uniqid = Math.random().toString(36).substr(2, 9);
-        x.id = uniqid;
-        return x;
-      });
-
-      setInitialStateIds(data);
-      return;
-    }
-    addIds();
-  }, [initialStateIds]);
+  const [showList, setShowList] = useState(false);
+  const [showEditItem, setShowEditItem] = useState(false);
 
   return (
-    <div className="border w30">
-      <EditItem title={tree.title} id={tree.id} />
+    <div className="relative">
+      <EditItem
+        title={tree.title}
+        id={tree.id}
+        tree={tree}
+        children={initialStateIds}
+        setShowList={setShowList}
+        showList={showList}
+        setShowEditItem={setShowEditItem}
+        setInitialStateIds={setInitialStateIds}
+        showEditItem={showEditItem}
+        onDelete={() => onDelete(tree.id, setInitialStateIds)}
+      />
 
-      <div className="flex">
-        <ul>
-          <AddCategoryItem
-            initialStateIds={initialStateIds}
-            setInitialStateIds={setInitialStateIds}
-            childId={tree.id}
-          />
-          {initialStateIds.length
-            ? initialStateIds.map((child, index) => (
-                <li key={tree.id}>
-                  <Category tree={child} childId={tree.id} />
-                </li>
-              ))
-            : ""}
-        </ul>
-      </div>
+      <ul>
+        {initialStateIds.length
+          ? initialStateIds.map((child) => (
+              <li
+                key={child.id}
+                className={`list-inner ${showList ? "show" : ""}`}
+              >
+                <Category tree={child} childId={tree.id} />
+              </li>
+            ))
+          : ""}
+        <AddCategoryItem
+          initialStateIds={initialStateIds}
+          setInitialStateIds={setInitialStateIds}
+          childId={tree.id}
+          setShowEditItem={setShowEditItem}
+          showEditItem={showEditItem}
+          setShowList={setShowList}
+        />
+      </ul>
     </div>
   );
 };

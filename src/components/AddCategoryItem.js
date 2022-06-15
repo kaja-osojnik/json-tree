@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const AddCategoryItem = ({ initialStateIds, childId, setInitialStateIds }) => {
+const AddCategoryItem = ({
+  initialStateIds,
+  setInitialStateIds,
+  showEditItem,
+  topLevel,
+  setShowList,
+}) => {
   const [newItem, setNewItem] = useState("");
   const [err, setErr] = useState(false);
   const [showInput, setShowinput] = useState(false);
@@ -16,40 +22,56 @@ const AddCategoryItem = ({ initialStateIds, childId, setInitialStateIds }) => {
       ]);
 
       setNewItem("");
-      setShowinput("");
+      setShowinput(false);
+      setShowList(true);
     }
   };
 
-  return (
-    <div>
-      {" "}
-      <p
-        className="pl16"
-        style={{ fontSize: "24px" }}
-        onClick={() => setShowinput(!showInput)}
-      >
-        {showInput ? "-" : "+"}
-      </p>
-      {showInput && (
-        <li className="flex">
-          <div>
-            <input
-              autoFocus
-              type="text"
-              name="newItem"
-              value={newItem}
-              onChange={(e) => {
-                setErr(false);
-                setNewItem(e.target.value);
-              }}
-            />
-            {err && <small>*Can not add an empty element</small>}
-          </div>
+  const onCancel = () => {
+    setNewItem("");
+    setShowinput(false);
+  };
 
-          <button onClick={onSubmit}>ADD</button>
-        </li>
+  return (
+    <li className="mb32">
+      {!showEditItem && !topLevel && (
+        <p className="add-wrap" onClick={() => setShowinput(!showInput)}>
+          {!showInput && <span className="plus">+</span>}
+        </p>
       )}
-    </div>
+
+      {!showEditItem && topLevel && (
+        <p onClick={() => setShowinput(!showInput)}>
+          {!showInput && <span className="plus">+</span>}
+        </p>
+      )}
+
+      {showInput && (
+        <div className="input-add">
+          <input
+            autoFocus
+            type="text"
+            name="newItem"
+            value={newItem}
+            onChange={(e) => {
+              setErr(false);
+              setNewItem(e.target.value);
+            }}
+            placeholder="Add New Item"
+          />
+          {err && <small>*Can not add an empty element</small>}
+
+          <div className="submit-sec">
+            <button className="add-btn" onClick={onSubmit}>
+              Add
+            </button>
+            <button className="cancel" onClick={onCancel}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </li>
   );
 };
 

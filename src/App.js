@@ -1,17 +1,19 @@
-import React, { Fragment } from "react";
-import "./App.css";
+import React from "react";
+import "./App.scss";
 import Main from "./components/Main";
 
 function App() {
   return (
-    <Fragment>
-      <div>
-        <p>Welcome to</p>
-        <h1>- JSON TREE -</h1>
-        <p>Please insert your JSON here or view default.</p>
-      </div>
+    <div className="flex body-flex">
       <Main />
-    </Fragment>
+      <div className="w-50">
+        <div>
+          <p>Welcome to</p>
+          <h1>- JSON TREE -</h1>
+          <p>task</p>
+        </div>
+      </div>
+    </div>
   );
 }
 
